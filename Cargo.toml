@@ -8,4 +8,7 @@ homepage = "https://github.com/nilssonk/rdhcp"
 repository = "https://github.com/nilssonk/rdhcp"
 edition = "2021"
 
+[features]
+fail-on-warnings = []
+
 [dependencies]
