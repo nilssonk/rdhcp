@@ -1,16 +1,7 @@
 #![cfg_attr(feature = "fail-on-warnings", deny(warnings))]
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+mod packet;
+pub use packet::Packet;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+mod option;
+pub use option::Option;
