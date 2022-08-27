@@ -1,4 +1,4 @@
-pub enum Option {
+pub enum DhcpOption {
     Padding,
     SubnetMask,
     TimeOffset,
