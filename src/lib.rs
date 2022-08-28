@@ -5,3 +5,5 @@ pub use dhcp_packet::DhcpPacket;
 
 mod dhcp_option;
 pub use dhcp_option::DhcpOption;
+
+pub mod errors;

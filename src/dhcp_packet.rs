@@ -1,4 +1,6 @@
+use crate::errors::*;
 use crate::DhcpOption;
+use core::borrow::Borrow;
 use std::net::IpAddr;
 
 pub enum DhcpPacketType {
@@ -15,9 +17,19 @@ pub struct DhcpPacket<T> {
     data: T,
 }
 
-impl<T> DhcpPacket<T> {
-    pub fn get_type() -> DhcpPacketType {
-        todo!()
+impl<T> DhcpPacket<T>
+where
+    T: Borrow<[u8]>,
+{
+    pub fn get_type(&self) -> Result<DhcpPacketType, OutOfRange> {
+        const TYPE_OFFSET: usize = 0;
+
+        let data = self.data.borrow();
+        match data[TYPE_OFFSET] {
+            0 => Ok(DhcpPacketType::Request),
+            1 => Ok(DhcpPacketType::Reply),
+            _ => Err(OutOfRange),
+        }
     }
 
     pub fn get_length() -> u8 {
