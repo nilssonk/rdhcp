@@ -3,7 +3,7 @@ use crate::DhcpOption;
 use core::borrow::Borrow;
 use std::net::IpAddr;
 
-pub enum DhcpPacketType {
+pub enum DhcpOperation {
     Request,
     Reply,
 }
@@ -21,18 +21,22 @@ impl<T> DhcpPacket<T>
 where
     T: Borrow<[u8]>,
 {
-    pub fn get_type(&self) -> Result<DhcpPacketType, OutOfRange> {
-        const TYPE_OFFSET: usize = 0;
+    pub fn get_operation(&self) -> Result<DhcpOperation, OutOfRange> {
+        const OFFSET: usize = 0;
 
         let data = self.data.borrow();
-        match data[TYPE_OFFSET] {
-            0 => Ok(DhcpPacketType::Request),
-            1 => Ok(DhcpPacketType::Reply),
+        match data[OFFSET] {
+            1 => Ok(DhcpOperation::Request),
+            2 => Ok(DhcpOperation::Reply),
             _ => Err(OutOfRange),
         }
     }
 
-    pub fn get_length() -> u8 {
+    pub fn get_hardware_address_type() -> u8 {
+        todo!()
+    }
+
+    pub fn get_hardware_address_length() -> u8 {
         todo!()
     }
 
