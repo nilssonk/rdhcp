@@ -12,6 +12,11 @@ pub enum DhcpPacketFlags {
     // @TODO
 }
 
+#[derive(Debug)]
+pub enum HardwareAddressType {
+    Ethernet,
+}
+
 #[allow(dead_code)] // Remove upon first use
 pub struct DhcpPacket<T> {
     data: T,
@@ -32,8 +37,13 @@ where
         }
     }
 
-    pub fn get_hardware_address_type() -> u8 {
-        todo!()
+    pub fn get_hardware_address_type(&self) -> Result<HardwareAddressType, OutOfRange> {
+        const OFFSET: usize = 1;
+        let data = self.data.borrow();
+        match data[OFFSET] {
+            1 => Ok(HardwareAddressType::Ethernet),
+            _ => Err(OutOfRange),
+        }
     }
 
     pub fn get_hardware_address_length() -> u8 {
