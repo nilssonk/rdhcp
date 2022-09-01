@@ -17,7 +17,7 @@ pub enum HardwareAddressType {
     Ethernet,
 }
 
-#[allow(dead_code)] // Remove upon first use
+#[allow(dead_code)]
 pub struct DhcpPacket<T> {
     data: T,
 }
@@ -46,8 +46,9 @@ where
         }
     }
 
-    pub fn get_hardware_address_length() -> u8 {
-        todo!()
+    pub fn get_hardware_address_length(&self) -> u8 {
+        const OFFSET: usize = 2;
+        self.data.borrow()[OFFSET]
     }
 
     pub fn get_hops() -> u8 {
