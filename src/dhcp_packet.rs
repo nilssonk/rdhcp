@@ -51,8 +51,9 @@ where
         self.data.borrow()[OFFSET]
     }
 
-    pub fn get_hops() -> u8 {
-        todo!()
+    pub fn get_hops(&self) -> u8 {
+        const OFFSET: usize = 3;
+        self.data.borrow()[OFFSET]
     }
 
     pub fn get_xid() -> u32 {
