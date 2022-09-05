@@ -56,8 +56,10 @@ where
         self.data.borrow()[OFFSET]
     }
 
-    pub fn get_xid() -> u32 {
-        todo!()
+    pub fn get_xid(&self) -> u32 {
+        const OFFSET: usize = 4;
+        let data = &self.data.borrow()[OFFSET..];
+        u32::from_be_bytes(data[..4].try_into().unwrap())
     }
 
     pub fn get_secs() -> u16 {
