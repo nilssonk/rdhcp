@@ -62,8 +62,10 @@ where
         u32::from_be_bytes(data[..4].try_into().unwrap())
     }
 
-    pub fn get_secs() -> u16 {
-        todo!()
+    pub fn get_secs(&self) -> u16 {
+        const OFFSET: usize = 8;
+        let data = &self.data.borrow()[OFFSET..];
+        u16::from_be_bytes(data[..2].try_into().unwrap())
     }
 
     pub fn get_flags() -> DhcpPacketFlags {
