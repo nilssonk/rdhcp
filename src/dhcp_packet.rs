@@ -8,8 +8,17 @@ pub enum DhcpOperation {
     Reply,
 }
 
-pub enum DhcpPacketFlags {
-    // @TODO
+#[allow(dead_code)]
+pub struct DhcpPacketFlags {
+    data: u16,
+}
+
+impl DhcpPacketFlags {
+    fn from(input: &[u8]) -> Self {
+        Self {
+            data: u16::from_be_bytes(input[..2].try_into().unwrap()),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -17,7 +26,6 @@ pub enum HardwareAddressType {
     Ethernet,
 }
 
-#[allow(dead_code)]
 pub struct DhcpPacket<T> {
     data: T,
 }
@@ -68,8 +76,10 @@ where
         u16::from_be_bytes(data[..2].try_into().unwrap())
     }
 
-    pub fn get_flags() -> DhcpPacketFlags {
-        todo!()
+    pub fn get_flags(&self) -> DhcpPacketFlags {
+        const OFFSET: usize = 10;
+        let data = &self.data.borrow()[OFFSET..];
+        DhcpPacketFlags::from(data)
     }
 
     pub fn get_client_ip() -> Option<IpAddr> {
