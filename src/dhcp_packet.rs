@@ -8,7 +8,6 @@ pub enum DhcpOperation {
     Reply,
 }
 
-#[allow(dead_code)]
 pub struct DhcpPacketFlags {
     data: u16,
 }
@@ -18,6 +17,10 @@ impl DhcpPacketFlags {
         Self {
             data: u16::from_be_bytes(input[..2].try_into().unwrap()),
         }
+    }
+
+    pub fn is_broadcast(&self) -> bool {
+        self.data & 0x1 != 0
     }
 }
 
