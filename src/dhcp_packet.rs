@@ -85,8 +85,11 @@ where
         DhcpPacketFlags::from(data)
     }
 
-    pub fn get_client_ip() -> Ipv4Addr {
-        todo!()
+    pub fn get_client_ip(&self) -> Ipv4Addr {
+        const OFFSET: usize = 12;
+        let data = &self.data.borrow()[OFFSET..];
+        let octets: [u8; 4] = data[..4].try_into().unwrap();
+        octets.into()
     }
 
     pub fn get_offered_ip() -> Ipv4Addr {
