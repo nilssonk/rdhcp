@@ -1,7 +1,7 @@
 use crate::errors::*;
 use crate::DhcpOption;
 use core::borrow::Borrow;
-use std::net::IpAddr;
+use std::net::Ipv4Addr;
 
 pub enum DhcpOperation {
     Request,
@@ -85,19 +85,19 @@ where
         DhcpPacketFlags::from(data)
     }
 
-    pub fn get_client_ip() -> Option<IpAddr> {
+    pub fn get_client_ip() -> Ipv4Addr {
         todo!()
     }
 
-    pub fn get_offered_ip() -> Option<IpAddr> {
+    pub fn get_offered_ip() -> Ipv4Addr {
         todo!()
     }
 
-    pub fn get_server_ip() -> Option<IpAddr> {
+    pub fn get_server_ip() -> Ipv4Addr {
         todo!()
     }
 
-    pub fn get_gateway_ip() -> Option<IpAddr> {
+    pub fn get_gateway_ip() -> Ipv4Addr {
         todo!()
     }
 
