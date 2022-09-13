@@ -127,8 +127,11 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
-    pub fn get_boot_file() -> [u8; 128] {
-        todo!()
+    pub fn get_boot_file(&self) -> [u8; 128] {
+        const OFFSET: usize = 108;
+        const LENGTH: usize = 128;
+        let data = &self.data.borrow()[OFFSET..];
+        data[..LENGTH].try_into().unwrap()
     }
 
     pub fn get_options() -> Vec<DhcpOption> {
