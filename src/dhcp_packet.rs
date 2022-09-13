@@ -1,13 +1,15 @@
 use crate::errors::*;
 use crate::DhcpOption;
-use core::borrow::Borrow;
+pub use core::borrow::Borrow;
 use std::net::Ipv4Addr;
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum DhcpOperation {
     Request,
     Reply,
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct DhcpPacketFlags {
     data: u16,
 }
@@ -24,13 +26,20 @@ impl DhcpPacketFlags {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum HardwareAddressType {
     Ethernet,
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct DhcpPacket<T> {
     data: T,
+}
+
+impl<T> DhcpPacket<T> {
+    pub fn from(data: T) -> Self {
+        Self { data }
+    }
 }
 
 impl<T> DhcpPacket<T>
