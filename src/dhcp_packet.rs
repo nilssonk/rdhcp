@@ -102,8 +102,9 @@ where
         self.get_ip::<OFFSET>()
     }
 
-    pub fn get_server_ip() -> Ipv4Addr {
-        todo!()
+    pub fn get_server_ip(&self) -> Ipv4Addr {
+        const OFFSET: usize = 20;
+        self.get_ip::<OFFSET>()
     }
 
     pub fn get_gateway_ip() -> Ipv4Addr {
