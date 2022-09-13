@@ -120,8 +120,11 @@ where
         data[..length as usize].into()
     }
 
-    pub fn get_server_name() -> [u8; 64] {
-        todo!()
+    pub fn get_server_name(&self) -> [u8; 64] {
+        const OFFSET: usize = 44;
+        const LENGTH: usize = 64;
+        let data = &self.data.borrow()[OFFSET..];
+        data[..LENGTH].try_into().unwrap()
     }
 
     pub fn get_boot_file() -> [u8; 128] {
