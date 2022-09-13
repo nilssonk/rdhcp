@@ -112,8 +112,12 @@ where
         self.get_ip::<OFFSET>()
     }
 
-    pub fn get_client_hardware_address() -> [u8; 16] {
-        todo!()
+    pub fn get_client_hardware_address(&self) -> Vec<u8> {
+        const OFFSET: usize = 28;
+        const MAX_LENGTH: u8 = 16;
+        let length = std::cmp::min(MAX_LENGTH, self.get_hardware_address_length());
+        let data = &self.data.borrow()[OFFSET..];
+        data[..length as usize].into()
     }
 
     pub fn get_server_name() -> [u8; 64] {
