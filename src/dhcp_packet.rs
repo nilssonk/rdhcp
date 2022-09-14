@@ -1,6 +1,12 @@
+pub mod dhcp_option;
+pub use dhcp_option::DhcpOption;
+
+pub mod dhcp_option_iterator;
+pub use dhcp_option_iterator::DhcpOptionIterator;
+
 use crate::errors::*;
-use crate::DhcpOption;
 pub use core::borrow::Borrow;
+pub use core::iter::Iterator;
 use std::net::Ipv4Addr;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -143,7 +149,7 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
-    pub fn get_options() -> Vec<DhcpOption> {
-        todo!()
+    pub fn get_options(&self) -> impl Iterator<Item = DhcpOption> + '_ {
+        DhcpOptionIterator::from(self.data.borrow())
     }
 }
