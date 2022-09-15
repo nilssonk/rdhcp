@@ -2,30 +2,31 @@ use crate::DhcpOption;
 pub use core::borrow::Borrow;
 pub use core::iter::Iterator;
 
-#[allow(dead_code)] // Remove upon first use
-#[derive(Debug)]
-pub struct DhcpOptionIterator<T> {
-    data: T,
-    offset: usize,
+#[derive(Debug, PartialEq, Eq)]
+pub struct DhcpOptionIterator<'a> {
+    data: &'a [u8],
 }
 
-impl<T> DhcpOptionIterator<T> {
-    pub(crate) fn from(data: T) -> Self {
-        const OFFSET: usize = 236;
-        Self {
-            data,
-            offset: OFFSET,
-        }
+impl<'a> DhcpOptionIterator<'a> {
+    pub(crate) fn from(data: &'a [u8]) -> Self {
+        Self { data }
     }
 }
 
-impl<T> Iterator for DhcpOptionIterator<T>
-where
-    T: Borrow<[u8]>,
-{
-    type Item = DhcpOption;
+impl<'a> Iterator for DhcpOptionIterator<'a> {
+    type Item = DhcpOption<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        todo!()
+        if self.data.is_empty() {
+            return None;
+        }
+
+        let result = DhcpOption::try_decode(self.data);
+
+        if let Some(opt) = &result {
+            self.data = &self.data[opt.get_length()..];
+        }
+
+        result
     }
 }

@@ -150,6 +150,7 @@ where
     }
 
     pub fn get_options(&self) -> impl Iterator<Item = DhcpOption> + '_ {
-        DhcpOptionIterator::from(self.data.borrow())
+        const OFFSET: usize = 236;
+        DhcpOptionIterator::from(&self.data.borrow()[OFFSET..])
     }
 }
