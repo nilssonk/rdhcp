@@ -4,6 +4,9 @@ pub use dhcp_option::DhcpOption;
 pub mod dhcp_option_iterator;
 pub use dhcp_option_iterator::DhcpOptionIterator;
 
+mod dhcp_packet_flags_view;
+pub use dhcp_packet_flags_view::DhcpPacketFlagsView;
+
 use crate::errors::*;
 pub use core::borrow::Borrow;
 pub use core::iter::Iterator;
