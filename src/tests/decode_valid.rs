@@ -29,29 +29,29 @@ fn decode_request_old_ip() {
 
     let packet = DhcpPacket::from(data.borrow());
 
-    assert_eq!(packet.get_operation(), Ok(DhcpOperation::Request));
+    assert_eq!(packet.operation(), Ok(DhcpOperation::Request));
     assert_eq!(
-        packet.get_hardware_address_type(),
+        packet.hardware_address_type(),
         Ok(HardwareAddressType::Ethernet)
     );
-    assert_eq!(packet.get_hardware_address_length().get(), 6);
-    assert_eq!(packet.get_hops().get(), 0);
-    assert_eq!(packet.get_xid().get(), 0x963acd71);
-    assert_eq!(packet.get_secs().get(), 1);
-    let flags = packet.get_flags();
+    assert_eq!(packet.hardware_address_length().get(), 6);
+    assert_eq!(packet.hops().get(), 0);
+    assert_eq!(packet.xid().get(), 0x963acd71);
+    assert_eq!(packet.secs().get(), 1);
+    let flags = packet.flags();
     assert!(!flags.is_broadcast());
-    assert!(packet.get_client_ip().to_owned().is_unspecified());
-    assert!(packet.get_offered_ip().to_owned().is_unspecified());
-    assert!(packet.get_server_ip().to_owned().is_unspecified());
-    assert!(packet.get_gateway_ip().to_owned().is_unspecified());
+    assert!(packet.client_ip().to_owned().is_unspecified());
+    assert!(packet.offered_ip().to_owned().is_unspecified());
+    assert!(packet.server_ip().to_owned().is_unspecified());
+    assert!(packet.gateway_ip().to_owned().is_unspecified());
     assert_eq!(
-        packet.get_client_hardware_address(),
+        packet.client_hardware_address(),
         vec![0x30, 0xeb, 0x70, 0x50, 0x2b, 0xb9]
     );
-    assert!(packet.get_server_name().iter().all(|&x| x == 0));
-    assert!(packet.get_boot_file().iter().all(|&x| x == 0));
+    assert!(packet.server_name().iter().all(|&x| x == 0));
+    assert!(packet.boot_file().iter().all(|&x| x == 0));
 
-    let options: Vec<DhcpOption> = packet.get_options().collect();
+    let options: Vec<DhcpOption> = packet.options().collect();
     assert_eq!(
         options,
         vec![
