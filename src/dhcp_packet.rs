@@ -1,8 +1,11 @@
-pub mod dhcp_option;
-pub use dhcp_option::DhcpOption;
+pub mod dhcp_option_type;
+pub use dhcp_option_type::DhcpOptionType;
 
-mod dhcp_option_iterator;
-pub use dhcp_option_iterator::DhcpOptionIterator;
+pub mod dhcp_option_view;
+pub use dhcp_option_view::DhcpOptionView;
+
+mod dhcp_option_view_iterator;
+pub use dhcp_option_view_iterator::DhcpOptionViewIterator;
 
 mod dhcp_packet_flags_view;
 pub use dhcp_packet_flags_view::DhcpPacketFlagsView;
@@ -144,9 +147,9 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
-    pub fn options(&self) -> impl Iterator<Item = DhcpOption> + '_ {
+    pub fn options(&self) -> impl Iterator<Item = DhcpOptionView> + '_ {
         const OFFSET: usize = 236;
-        DhcpOptionIterator::from(&self.data.borrow()[OFFSET..])
+        DhcpOptionViewIterator::from(&self.data.borrow()[OFFSET..])
     }
 }
 
@@ -259,8 +262,8 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
-    pub fn options_mut(&self) -> impl Iterator<Item = DhcpOption> + '_ {
+    pub fn options_mut(&self) -> impl Iterator<Item = DhcpOptionView> + '_ {
         const OFFSET: usize = 236;
-        DhcpOptionIterator::from(&self.data.borrow()[OFFSET..])
+        DhcpOptionViewIterator::from(&self.data.borrow()[OFFSET..])
     }
 }

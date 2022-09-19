@@ -1,6 +1,6 @@
 #[derive(Debug, PartialEq, Eq)]
-pub enum DhcpOption<'a> {
-    Padding(usize),
+pub enum DhcpOptionType {
+    Padding,
     SubnetMask,
     TimeOffset,
     Router,
@@ -167,48 +167,6 @@ pub enum DhcpOption<'a> {
     SubnetAllocation,
     VirtualSubnetSelection,
     Reserved,
-    Unknown(&'a [u8]),
+    Unknown,
     End,
-}
-
-impl<'a> DhcpOption<'a> {
-    fn consolidated_padding(data: &[u8]) -> Self {
-        let mut length = 1;
-
-        while length < data.len() && data[length] == 0 {
-            length += 1;
-        }
-
-        Self::Padding(length)
-    }
-
-    fn try_decode_tlv(data: &'a [u8]) -> Option<Self> {
-        if data.len() < 2 {
-            return None;
-        }
-
-        let length = data[1] as usize;
-
-        Some(Self::Unknown(&data[..length + 2]))
-    }
-
-    pub(crate) fn try_decode(data: &'a [u8]) -> Option<Self> {
-        let tag = data[0];
-        match tag {
-            0 => Some(Self::consolidated_padding(data)),
-            99 => Some(Self::MagicCookie),
-            255 => Some(Self::End),
-            _ => Self::try_decode_tlv(data),
-        }
-    }
-
-    pub fn get_length(&self) -> usize {
-        match self {
-            Self::Padding(n) => *n,
-            Self::MagicCookie => 4,
-            Self::End => 1,
-            Self::Unknown(data) => data.len(),
-            _ => todo!(),
-        }
-    }
 }
