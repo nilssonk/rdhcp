@@ -50,5 +50,21 @@ fn decode_request_old_ip() {
     );
     assert!(packet.get_server_name().iter().all(|&x| x == 0));
     assert!(packet.get_boot_file().iter().all(|&x| x == 0));
-    // @TODO: Options
+
+    let options: Vec<DhcpOption> = packet.get_options().collect();
+    assert_eq!(
+        options,
+        vec![
+            DhcpOption::MagicCookie,
+            DhcpOption::Unknown(&[53, 1, 3]),
+            DhcpOption::Unknown(&[61, 7, 1, 48, 235, 112, 80, 43, 185]),
+            DhcpOption::Unknown(&[
+                55, 17, 1, 2, 6, 12, 15, 26, 28, 121, 3, 33, 40, 41, 42, 119, 249, 252, 17
+            ]),
+            DhcpOption::Unknown(&[57, 2, 2, 64]),
+            DhcpOption::Unknown(&[50, 4, 192, 168, 0, 3]),
+            DhcpOption::Unknown(&[12, 11, 102, 101, 100, 111, 114, 97, 116, 104, 105, 110, 107]),
+            DhcpOption::End
+        ]
+    );
 }
