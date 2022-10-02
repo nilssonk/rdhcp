@@ -34,16 +34,16 @@ fn decode_request_old_ip() {
         packet.get_hardware_address_type(),
         Ok(HardwareAddressType::Ethernet)
     );
-    assert_eq!(packet.get_hardware_address_length(), 6);
-    assert_eq!(packet.get_hops(), 0);
-    assert_eq!(packet.get_xid(), 0x963acd71);
-    assert_eq!(packet.get_secs(), 1);
+    assert_eq!(packet.get_hardware_address_length().get(), 6);
+    assert_eq!(packet.get_hops().get(), 0);
+    assert_eq!(packet.get_xid().get(), 0x963acd71);
+    assert_eq!(packet.get_secs().get(), 1);
     let flags = packet.get_flags();
     assert!(!flags.is_broadcast());
-    assert!(packet.get_client_ip().is_unspecified());
-    assert!(packet.get_offered_ip().is_unspecified());
-    assert!(packet.get_server_ip().is_unspecified());
-    assert!(packet.get_gateway_ip().is_unspecified());
+    assert!(packet.get_client_ip().to_owned().is_unspecified());
+    assert!(packet.get_offered_ip().to_owned().is_unspecified());
+    assert!(packet.get_server_ip().to_owned().is_unspecified());
+    assert!(packet.get_gateway_ip().to_owned().is_unspecified());
     assert_eq!(
         packet.get_client_hardware_address(),
         vec![0x30, 0xeb, 0x70, 0x50, 0x2b, 0xb9]

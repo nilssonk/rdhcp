@@ -13,7 +13,6 @@ impl<T, U> IntegerView<T, U>
 where
     U: Borrow<[u8]>,
 {
-    #[allow(unused)] // Remove upon first use
     pub(crate) fn from(data: U) -> Self {
         Self {
             data,
@@ -50,18 +49,18 @@ where
     }
 }
 
-#[allow(unused)] // Remove upon first use
 macro_rules! integer_view{
     {$t:ty} =>
     {
         IntegerView<$t, impl Borrow<[u8]> + '_>
     }
 }
+pub(crate) use integer_view;
 
-#[allow(unused)] // Remove upon first use
 macro_rules! integer_view_mut{
     {$t:ty} =>
     {
         IntegerView<$t, impl BorrowMut<[u8]> + '_>
     }
 }
+pub(crate) use integer_view_mut;
