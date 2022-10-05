@@ -27,7 +27,7 @@ fn decode_request_old_ip() {
         0x64, 0x6f, 0x72, 0x61, 0x74, 0x68, 0x69, 0x6e, 0x6b, 0xff,
     ];
 
-    let packet = DhcpPacket::from(data.borrow());
+    let packet = DhcpPacket::try_from(data.borrow()).unwrap();
 
     assert_eq!(packet.operation(), Ok(DhcpOperation::Request));
     assert_eq!(

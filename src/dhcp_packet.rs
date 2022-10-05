@@ -29,16 +29,20 @@ pub struct DhcpPacket<T> {
     data: T,
 }
 
-impl<T> DhcpPacket<T> {
-    pub fn from(data: T) -> Self {
-        Self { data }
-    }
-}
-
 impl<T> DhcpPacket<T>
 where
     T: Borrow<[u8]>,
 {
+    pub fn try_from(data: T) -> Result<Self, Incomplete> {
+        const MIN_SIZE: usize = 236;
+        let slice = data.borrow();
+        if slice.len() >= MIN_SIZE {
+            Ok(Self { data })
+        } else {
+            Err(Incomplete::new(MIN_SIZE, slice.len()))
+        }
+    }
+
     pub fn operation(&self) -> Result<DhcpOperation, OutOfRange> {
         const OFFSET: usize = 0;
 
