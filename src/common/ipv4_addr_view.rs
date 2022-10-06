@@ -10,10 +10,12 @@ impl<T> Ipv4AddrView<T>
 where
     T: Borrow<[u8]>,
 {
+    #[inline(always)]
     pub(crate) fn from(data: T) -> Self {
         Self { data }
     }
 
+    #[inline]
     pub fn to_owned(&self) -> Ipv4Addr {
         let data: [u8; 4] = self.data.borrow()[..4].try_into().unwrap();
         data.into()
@@ -24,6 +26,7 @@ impl<T> Ipv4AddrView<T>
 where
     T: BorrowMut<[u8]>,
 {
+    #[inline(always)]
     pub(crate) fn from_mut(data: T) -> Self {
         Self { data }
     }
