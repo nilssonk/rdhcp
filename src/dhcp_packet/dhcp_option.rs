@@ -172,6 +172,7 @@ pub enum DhcpOption<'a> {
 }
 
 impl<'a> DhcpOption<'a> {
+    #[inline(always)]
     fn consolidated_padding(data: &[u8]) -> Self {
         let mut length = 1;
 
@@ -182,6 +183,7 @@ impl<'a> DhcpOption<'a> {
         Self::Padding(length)
     }
 
+    #[inline(always)]
     fn try_decode_tlv(data: &'a [u8]) -> Option<Self> {
         if data.len() < 2 {
             return None;
@@ -192,6 +194,7 @@ impl<'a> DhcpOption<'a> {
         Some(Self::Unknown(&data[..length + 2]))
     }
 
+    #[inline]
     pub(crate) fn try_decode(data: &'a [u8]) -> Option<Self> {
         let tag = data[0];
         match tag {
@@ -202,6 +205,7 @@ impl<'a> DhcpOption<'a> {
         }
     }
 
+    #[inline]
     pub fn get_length(&self) -> usize {
         match self {
             Self::Padding(n) => *n,

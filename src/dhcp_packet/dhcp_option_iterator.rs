@@ -8,6 +8,7 @@ pub struct DhcpOptionIterator<'a> {
 }
 
 impl<'a> DhcpOptionIterator<'a> {
+    #[inline(always)]
     pub(crate) fn from(data: &'a [u8]) -> Self {
         Self { data }
     }
@@ -16,6 +17,7 @@ impl<'a> DhcpOptionIterator<'a> {
 impl<'a> Iterator for DhcpOptionIterator<'a> {
     type Item = DhcpOption<'a>;
 
+    #[inline(always)]
     fn next(&mut self) -> Option<Self::Item> {
         if self.data.is_empty() {
             return None;
