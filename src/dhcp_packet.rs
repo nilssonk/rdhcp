@@ -33,6 +33,7 @@ impl<T> DhcpPacket<T>
 where
     T: Borrow<[u8]>,
 {
+    #[inline]
     pub fn try_from(data: T) -> Result<Self, Incomplete> {
         const MIN_SIZE: usize = 236;
         let slice = data.borrow();
@@ -43,6 +44,7 @@ where
         }
     }
 
+    #[inline]
     pub fn operation(&self) -> Result<DhcpOperation, OutOfRange> {
         const OFFSET: usize = 0;
 
@@ -54,6 +56,7 @@ where
         }
     }
 
+    #[inline]
     pub fn hardware_address_type(&self) -> Result<HardwareAddressType, OutOfRange> {
         const OFFSET: usize = 1;
         let data = self.data.borrow();
@@ -63,30 +66,35 @@ where
         }
     }
 
+    #[inline]
     pub fn hardware_address_length(&self) -> integer_view! {u8} {
         const OFFSET: usize = 2;
         let data = &self.data.borrow()[OFFSET..];
         IntegerView::from(&data[..1])
     }
 
+    #[inline]
     pub fn hops(&self) -> integer_view! {u8} {
         const OFFSET: usize = 3;
         let data = &self.data.borrow()[OFFSET..];
         IntegerView::from(&data[..1])
     }
 
+    #[inline]
     pub fn xid(&self) -> integer_view! {u32} {
         const OFFSET: usize = 4;
         let data = &self.data.borrow()[OFFSET..];
         IntegerView::from(&data[..4])
     }
 
+    #[inline]
     pub fn secs(&self) -> integer_view! {u16} {
         const OFFSET: usize = 8;
         let data = &self.data.borrow()[OFFSET..];
         IntegerView::from(&data[..2])
     }
 
+    #[inline]
     pub fn flags(&self) -> DhcpPacketFlagsView<impl Borrow<[u8]> + '_> {
         const OFFSET: usize = 10;
         let data = &self.data.borrow()[OFFSET..];
@@ -99,26 +107,31 @@ where
         Ipv4AddrView::from(&data[..4])
     }
 
+    #[inline]
     pub fn client_ip(&self) -> ipv4_addr_view! {} {
         const OFFSET: usize = 12;
         self.ip::<OFFSET>()
     }
 
+    #[inline]
     pub fn offered_ip(&self) -> ipv4_addr_view! {} {
         const OFFSET: usize = 16;
         self.ip::<OFFSET>()
     }
 
+    #[inline]
     pub fn server_ip(&self) -> ipv4_addr_view! {} {
         const OFFSET: usize = 20;
         self.ip::<OFFSET>()
     }
 
+    #[inline]
     pub fn gateway_ip(&self) -> ipv4_addr_view! {} {
         const OFFSET: usize = 24;
         self.ip::<OFFSET>()
     }
 
+    #[inline]
     pub fn client_hardware_address(&self) -> &[u8] {
         const OFFSET: usize = 28;
         const MAX_LENGTH: u8 = 16;
@@ -130,6 +143,7 @@ where
         &data[..length as usize]
     }
 
+    #[inline]
     pub fn server_name(&self) -> [u8; 64] {
         const OFFSET: usize = 44;
         const LENGTH: usize = 64;
@@ -137,6 +151,7 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
+    #[inline]
     pub fn boot_file(&self) -> [u8; 128] {
         const OFFSET: usize = 108;
         const LENGTH: usize = 128;
@@ -144,6 +159,7 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
+    #[inline]
     pub fn options(&self) -> impl Iterator<Item = DhcpOption> + '_ {
         const OFFSET: usize = 236;
         DhcpOptionIterator::from(&self.data.borrow()[OFFSET..])
