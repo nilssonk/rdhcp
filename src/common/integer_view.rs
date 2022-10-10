@@ -13,6 +13,7 @@ impl<T, U> IntegerView<T, U>
 where
     U: Borrow<[u8]>,
 {
+    #[inline(always)]
     pub(crate) fn from(data: U) -> Self {
         Self {
             data,
@@ -26,6 +27,7 @@ where
     T: BeInteger,
     U: Borrow<[u8]>,
 {
+    #[inline]
     pub fn get(&self) -> T {
         <T as BeInteger>::read_be(self.data.borrow())
     }
@@ -36,7 +38,7 @@ where
     T: BeInteger,
     U: BorrowMut<[u8]>,
 {
-    #[allow(unused)] // Remove upon first use
+    #[inline(always)]
     pub(crate) fn from_mut(data: U) -> Self {
         Self {
             data,
@@ -44,6 +46,7 @@ where
         }
     }
 
+    #[inline]
     pub fn set(&mut self, value: T) {
         value.write_be(self.data.borrow_mut());
     }
