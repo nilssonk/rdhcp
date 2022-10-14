@@ -29,7 +29,7 @@ fn decode_request_old_ip() {
 
     let packet = DhcpPacket::try_from(data.borrow()).unwrap();
 
-    assert_eq!(packet.operation(), Ok(DhcpOperation::Request));
+    assert_eq!(packet.operation().try_get(), Ok(DhcpOperation::Request));
     assert_eq!(
         packet.hardware_address_type(),
         Ok(HardwareAddressType::Ethernet)

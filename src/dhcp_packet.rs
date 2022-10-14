@@ -1,3 +1,9 @@
+mod dhcp_operation;
+pub use dhcp_operation::DhcpOperation;
+
+mod dhcp_operation_view;
+pub use dhcp_operation_view::DhcpOperationView;
+
 pub mod dhcp_option;
 pub use dhcp_option::DhcpOption;
 
@@ -12,12 +18,6 @@ use crate::errors::*;
 
 pub use core::borrow::{Borrow, BorrowMut};
 pub use core::iter::Iterator;
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum DhcpOperation {
-    Request,
-    Reply,
-}
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum HardwareAddressType {
@@ -45,15 +45,10 @@ where
     }
 
     #[inline]
-    pub fn operation(&self) -> Result<DhcpOperation, OutOfRange> {
+    pub fn operation(&self) -> DhcpOperationView<impl Borrow<[u8]> + '_> {
         const OFFSET: usize = 0;
-
         let data = self.data.borrow();
-        match data[OFFSET] {
-            1 => Ok(DhcpOperation::Request),
-            2 => Ok(DhcpOperation::Reply),
-            _ => Err(OutOfRange),
-        }
+        DhcpOperationView::from(&data[OFFSET..])
     }
 
     #[inline]
@@ -170,15 +165,10 @@ impl<T> DhcpPacket<T>
 where
     T: BorrowMut<[u8]>,
 {
-    pub fn operation_mut(&self) -> Result<DhcpOperation, OutOfRange> {
+    pub fn operation_mut(&mut self) -> DhcpOperationView<impl BorrowMut<[u8]> + '_> {
         const OFFSET: usize = 0;
-
-        let data = self.data.borrow();
-        match data[OFFSET] {
-            1 => Ok(DhcpOperation::Request),
-            2 => Ok(DhcpOperation::Reply),
-            _ => Err(OutOfRange),
-        }
+        let data = self.data.borrow_mut();
+        DhcpOperationView::from(&mut data[OFFSET..])
     }
 
     pub fn hardware_address_type_mut(&self) -> Result<HardwareAddressType, OutOfRange> {
