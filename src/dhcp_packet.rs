@@ -165,12 +165,14 @@ impl<T> DhcpPacket<T>
 where
     T: BorrowMut<[u8]>,
 {
+    #[inline]
     pub fn operation_mut(&mut self) -> DhcpOperationView<impl BorrowMut<[u8]> + '_> {
         const OFFSET: usize = 0;
         let data = self.data.borrow_mut();
         DhcpOperationView::from(&mut data[OFFSET..])
     }
 
+    #[inline]
     pub fn hardware_address_type_mut(&self) -> Result<HardwareAddressType, OutOfRange> {
         const OFFSET: usize = 1;
         let data = self.data.borrow();
@@ -189,26 +191,31 @@ where
         IntegerView::from_mut(&mut data[..U::SIZE])
     }
 
+    #[inline]
     pub fn hardware_address_length_mut(&mut self) -> integer_view_mut! {u8} {
         const OFFSET: usize = 2;
         self.integer_mut::<OFFSET, u8>()
     }
 
+    #[inline]
     pub fn hops_mut(&mut self) -> integer_view_mut! {u8} {
         const OFFSET: usize = 3;
         self.integer_mut::<OFFSET, u8>()
     }
 
+    #[inline]
     pub fn xid_mut(&mut self) -> integer_view_mut! {u32} {
         const OFFSET: usize = 4;
         self.integer_mut::<OFFSET, u32>()
     }
 
+    #[inline]
     pub fn secs_mut(&mut self) -> integer_view_mut! {u16} {
         const OFFSET: usize = 8;
         self.integer_mut::<OFFSET, u16>()
     }
 
+    #[inline]
     pub fn flags_mut(&mut self) -> DhcpPacketFlagsView<impl BorrowMut<[u8]> + '_> {
         const OFFSET: usize = 10;
         let data = &mut self.data.borrow_mut()[OFFSET..];
@@ -221,26 +228,31 @@ where
         Ipv4AddrView::from_mut(&mut data[..4])
     }
 
+    #[inline]
     pub fn client_ip_mut(&mut self) -> ipv4_addr_view_mut! {} {
         const OFFSET: usize = 12;
         self.ip_mut::<OFFSET>()
     }
 
+    #[inline]
     pub fn offered_ip_mut(&mut self) -> ipv4_addr_view_mut! {} {
         const OFFSET: usize = 16;
         self.ip_mut::<OFFSET>()
     }
 
+    #[inline]
     pub fn server_ip_mut(&mut self) -> ipv4_addr_view_mut! {} {
         const OFFSET: usize = 20;
         self.ip_mut::<OFFSET>()
     }
 
+    #[inline]
     pub fn gateway_ip_mut(&mut self) -> ipv4_addr_view_mut! {} {
         const OFFSET: usize = 24;
         self.ip_mut::<OFFSET>()
     }
 
+    #[inline]
     pub fn client_hardware_address_mut(&mut self) -> &mut [u8] {
         const OFFSET: usize = 28;
         const MAX_LENGTH: u8 = 16;
@@ -251,6 +263,7 @@ where
         &mut data[..length as usize]
     }
 
+    #[inline]
     pub fn server_name_mut(&self) -> [u8; 64] {
         const OFFSET: usize = 44;
         const LENGTH: usize = 64;
@@ -258,6 +271,7 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
+    #[inline]
     pub fn boot_file_mut(&self) -> [u8; 128] {
         const OFFSET: usize = 108;
         const LENGTH: usize = 128;
@@ -265,6 +279,7 @@ where
         data[..LENGTH].try_into().unwrap()
     }
 
+    #[inline]
     pub fn options_mut(&self) -> impl Iterator<Item = DhcpOption> + '_ {
         const OFFSET: usize = 236;
         DhcpOptionIterator::from(&self.data.borrow()[OFFSET..])
