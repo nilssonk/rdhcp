@@ -34,13 +34,13 @@ where
     T: Borrow<[u8]>,
 {
     #[inline]
-    pub fn try_from(data: T) -> Result<Self, Incomplete> {
+    pub fn try_from(data: T) -> Result<Self, InvalidLength> {
         const MIN_SIZE: usize = 236;
         let slice = data.borrow();
         if slice.len() >= MIN_SIZE {
             Ok(Self { data })
         } else {
-            Err(Incomplete::new(MIN_SIZE, slice.len()))
+            Err(InvalidLength::new(MIN_SIZE, slice.len()))
         }
     }
 
