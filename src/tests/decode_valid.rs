@@ -31,10 +31,11 @@ fn decode_request_old_ip() {
 
     assert_eq!(packet.operation().try_get(), Ok(DhcpOperation::Request));
     assert_eq!(
-        packet.hardware_address_type(),
-        Ok(HardwareAddressType::Ethernet)
+        packet.client_hardware_address().try_get(),
+        Ok(HardwareAddress::Ethernet([
+            0x30, 0xeb, 0x70, 0x50, 0x2b, 0xb9
+        ]))
     );
-    assert_eq!(packet.hardware_address_length().get(), 6);
     assert_eq!(packet.hops().get(), 0);
     assert_eq!(packet.xid().get(), 0x963acd71);
     assert_eq!(packet.secs().get(), 1);
@@ -44,10 +45,6 @@ fn decode_request_old_ip() {
     assert!(packet.offered_ip().to_owned().is_unspecified());
     assert!(packet.server_ip().to_owned().is_unspecified());
     assert!(packet.gateway_ip().to_owned().is_unspecified());
-    assert_eq!(
-        packet.client_hardware_address(),
-        vec![0x30, 0xeb, 0x70, 0x50, 0x2b, 0xb9]
-    );
     assert!(packet.server_name().iter().all(|&x| x == 0));
     assert!(packet.boot_file().iter().all(|&x| x == 0));
 
