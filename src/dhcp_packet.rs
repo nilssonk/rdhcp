@@ -13,16 +13,17 @@ pub use dhcp_option_iterator::DhcpOptionIterator;
 mod dhcp_packet_flags_view;
 pub use dhcp_packet_flags_view::DhcpPacketFlagsView;
 
+mod hardware_address;
+pub use hardware_address::HardwareAddress;
+
+mod hardware_address_view;
+pub use hardware_address_view::HardwareAddressView;
+
 use crate::common::*;
 use crate::errors::*;
 
 pub use core::borrow::{Borrow, BorrowMut};
 pub use core::iter::Iterator;
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum HardwareAddressType {
-    Ethernet,
-}
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct DhcpPacket<T> {
@@ -52,20 +53,10 @@ where
     }
 
     #[inline]
-    pub fn hardware_address_type(&self) -> Result<HardwareAddressType, OutOfRange> {
+    pub fn client_hardware_address(&self) -> HardwareAddressView<impl Borrow<[u8]> + '_> {
         const OFFSET: usize = 1;
         let data = self.data.borrow();
-        match data[OFFSET] {
-            1 => Ok(HardwareAddressType::Ethernet),
-            _ => Err(OutOfRange),
-        }
-    }
-
-    #[inline]
-    pub fn hardware_address_length(&self) -> integer_view! {u8} {
-        const OFFSET: usize = 2;
-        let data = &self.data.borrow()[OFFSET..];
-        IntegerView::from(&data[..1])
+        HardwareAddressView::from(&data[OFFSET..])
     }
 
     #[inline]
@@ -127,18 +118,6 @@ where
     }
 
     #[inline]
-    pub fn client_hardware_address(&self) -> &[u8] {
-        const OFFSET: usize = 28;
-        const MAX_LENGTH: u8 = 16;
-
-        let stated_address_length = self.hardware_address_length().get();
-        let length = std::cmp::min(MAX_LENGTH, stated_address_length);
-
-        let data = &self.data.borrow()[OFFSET..];
-        &data[..length as usize]
-    }
-
-    #[inline]
     pub fn server_name(&self) -> [u8; 64] {
         const OFFSET: usize = 44;
         const LENGTH: usize = 64;
@@ -173,13 +152,12 @@ where
     }
 
     #[inline]
-    pub fn hardware_address_type_mut(&self) -> Result<HardwareAddressType, OutOfRange> {
+    pub fn client_hardware_address_mut(
+        &mut self,
+    ) -> HardwareAddressView<impl BorrowMut<[u8]> + '_> {
         const OFFSET: usize = 1;
-        let data = self.data.borrow();
-        match data[OFFSET] {
-            1 => Ok(HardwareAddressType::Ethernet),
-            _ => Err(OutOfRange),
-        }
+        let data = self.data.borrow_mut();
+        HardwareAddressView::from(&mut data[OFFSET..])
     }
 
     #[inline(always)]
@@ -189,12 +167,6 @@ where
     {
         let data = &mut self.data.borrow_mut()[OFFSET..];
         IntegerView::from_mut(&mut data[..U::SIZE])
-    }
-
-    #[inline]
-    pub fn hardware_address_length_mut(&mut self) -> integer_view_mut! {u8} {
-        const OFFSET: usize = 2;
-        self.integer_mut::<OFFSET, u8>()
     }
 
     #[inline]
@@ -250,17 +222,6 @@ where
     pub fn gateway_ip_mut(&mut self) -> ipv4_addr_view_mut! {} {
         const OFFSET: usize = 24;
         self.ip_mut::<OFFSET>()
-    }
-
-    #[inline]
-    pub fn client_hardware_address_mut(&mut self) -> &mut [u8] {
-        const OFFSET: usize = 28;
-        const MAX_LENGTH: u8 = 16;
-        let stated_address_length = self.hardware_address_length().get();
-        let length = std::cmp::min(MAX_LENGTH, stated_address_length);
-
-        let data = &mut self.data.borrow_mut()[OFFSET..];
-        &mut data[..length as usize]
     }
 
     #[inline]
