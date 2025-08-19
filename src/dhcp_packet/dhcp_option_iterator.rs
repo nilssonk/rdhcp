@@ -1,5 +1,4 @@
 use crate::DhcpOption;
-pub use core::borrow::Borrow;
 pub use core::iter::Iterator;
 
 #[derive(Debug, PartialEq, Eq)]
